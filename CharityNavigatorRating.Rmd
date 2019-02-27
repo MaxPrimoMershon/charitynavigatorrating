@@ -1,0 +1,25 @@
+---
+title: "CharityNavigatorRating"
+author: "Max Mershon"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r pkgs, include = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(broom)
+library(caret)
+```
+
+
+# Data Understanding
+```{r}
+
+```
+
