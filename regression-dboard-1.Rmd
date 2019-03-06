@@ -1,0 +1,42 @@
+---
+title: "Regression Dashboard Part 1"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(ISLR)
+library(tidyverse)
+library(janitor)
+df <- read_csv("real-estate.csv") %>%
+  clean_names()
+```
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Question 2
+
+```{r}
+summary(df)
+```
+
+### Question 3
+```{r}
+p <- ggplot(data = df,
+            aes(x = square_footage, y = rental_rate))
+p + geom_point(col = "#6E0000") +
+  geom_smooth(method = "lm", col = "black") +
+  theme_bw() +
+  scale_x_continuous("square footage") +
+  scale_y_continuous("rental rate")
+```
+
+### Question 4
+
+```{r}
+lm_df <- lm(rental_rate ~ ., data = df)
+summary(lm_df)
+```
