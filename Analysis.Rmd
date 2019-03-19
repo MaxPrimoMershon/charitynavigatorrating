@@ -1,0 +1,354 @@
+---
+title: "CharityNavigatorRating"
+author: "Max Mershon"
+date: "`r format(Sys.Date(), '%d %b %Y')`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r pkgs, include = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(broom)
+library(caret)
+library(plyr)
+library(GGally)
+library(car)
+library(glmnet)
+library(mgcv)
+library(nnet)
+```
+
+
+
+# 1. Data Understanding
+## Pull Data
+```{r}
+data = read.csv("Charities_Data.csv")
+str(data)
+```
+
+
+## Clean Numeric Variables
+Replace categorical occurence with a `-1` and remove them.
+```{r}
+data_clean <- data %>%
+  filter(Administrative.Expenses != "< 0.1%") %>%
+  filter(Fundraising.Expenses != "< 0.1%") %>%
+  filter(Fundraising.Efficiency != "< $0.01") %>%
+  filter(Working.Capital.Ratio..years. != "< 0.01") %>%
+  filter(Program.Expenses.Growth != "< 0.1%") %>%
+  filter(Liabilities.to.Assets != "< 0.1%")
+
+data_clean <- data_clean %>%
+  mutate(Administrative.Expenses = as.numeric(levels(data_clean[,7])[data_clean[,7]])) %>%
+  mutate(Fundraising.Expenses = as.numeric(levels(data_clean[,8])[data_clean[,8]])) %>%
+  mutate(Fundraising.Efficiency = as.numeric(levels(data_clean[,9])[data_clean[,9]])) %>%
+  mutate(Working.Capital.Ratio..years. = as.numeric(levels(data_clean[,10])[data_clean[,10]])) %>%
+  mutate(Program.Expenses.Growth = as.numeric(levels(data_clean[,11])[data_clean[,11]])) %>%
+  mutate(Liabilities.to.Assets = as.numeric(levels(data_clean[,12])[data_clean[,12]]))
+
+data_clean <- data_clean %>%
+  select( -c(Name, Link, EIN))
+
+nrow(data_clean)
+```
+
+
+## Descriptive Statistics
+```{r}
+summary(select(data_clean, c(2:9)))
+```
+
+
+## Histograms of Numeric Variables
+```{r}
+for (i in colnames(select(data_clean, c(2:9)))){
+  hist(data_clean[[i]], main = paste("Histogram of" , colnames(data_clean[i])))
+}
+```
+
+
+## Frequency Charts of True/False Variables
+```{r}
+for (i in colnames(select(data_clean, c(10:26)))){
+  print(ggplot(data_clean, aes(x = data_clean[[i]])) +
+    geom_bar(stat = "count") + 
+    xlab(colnames(data_clean[i])))
+}
+```
+
+
+## Correlations amongst numeric variables
+```{r}
+ggpairs(select(data_clean, c(2:9)), progress = FALSE)
+```
+
+
+
+# 2. Modeling
+## Linear Regression
+Calcuate MAE using CV for initial linear regression model.
+```{r}
+set.seed(123)
+
+reg_mod <- train(Overall.Rating ~ . - ID, 
+             data = data_clean, 
+             trControl = trainControl(method = "cv", number = 5),
+             method = "lm")
+
+reg_mod.mae_min <- reg_mod$results$MAE
+reg_mod.mae_min
+```
+
+Check linearity of errors and constant variance of errors (Fitted vs. Residuals plot)
+```{r}
+reg <- lm(Overall.Rating ~ . - ID, data_clean)
+plot(reg)
+```
+
+Remove outliers (Cook's Distance > .5)
+```{r}
+results <- augment(reg)
+
+outlies <- results %>%
+  filter(.cooksd >= 0.5)
+
+data_clean <- data_clean %>%
+  filter(!ID %in% outlies$ID)
+```
+
+Remove leverage points (Hat > .04)
+```{r}
+leverage <- results %>%
+  filter(.hat >= 0.04)
+
+data_clean <- data_clean %>%
+  filter(!ID %in% leverage$ID)
+```
+
+Refit model
+```{r}
+reg <- lm(Overall.Rating ~ . - ID, data_clean)
+summary(reg)
+```
+
+Remove `No.Material.diversion.of.assets` and `Documents.Board.Meeting.Minutes` because all values are True and then refit.
+```{r}
+reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, data_clean)
+summary(reg)
+```
+
+Remove `Administrative.Expenses` because highest statistically insignificant pvalue and refit.
+```{r}
+reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, data_clean)
+summary(reg)
+```
+
+Plot results.
+```{r}
+plot(reg)
+```
+
+Plot residuals for each continuous input variable.
+```{r}
+results <- augment(reg)
+
+for (i in colnames(select(results, c(3:9)))){
+  print(ggplot(results, aes(x = results[[i]], y = results[[29]])) +
+    geom_point() + 
+    xlab(colnames(results[i])))
+}
+```
+
+Recalculate CV MAE for final regression model.
+```{r}
+set.seed(123)
+
+reg_mod2 <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, 
+             data = data_clean, 
+             trControl = trainControl(method = "cv", number = 5),
+             method = "lm")
+
+reg_mod2.mae_min <- reg_mod2$results$MAE
+reg_mod2.mae_min
+```
+
+
+## Lasso Linear Regression
+Calculate CV MAE for tuned lasso linear regression after trying different values of lambda.
+```{r}
+set.seed(123)
+lambdas <- 10^seq(-2, 5, len = 100)
+
+data_clean_matrix<- model.matrix(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, data = data_clean)[, -1]
+
+reg_lasso <- cv.glmnet(data_clean_matrix, 
+                       data_clean$Overall.Rating, 
+                       alpha = 1, 
+                       lambda = lambdas,
+                       type.measure = "mae",
+                       nfolds = 5,
+                       standardize = TRUE)
+
+reg_lasso.mae_min <- reg_lasso$cvm[reg_lasso$lambda == reg_lasso$lambda.min]
+reg_lasso.mae_min
+```
+
+
+## GAM
+Calculate CV MAE for tuned GAM after trying different degrees of freedom.
+```{r}
+set.seed(123)
+
+gam_mod <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, 
+                  data = data_clean,
+                  method = "gamSpline",
+                  trControl = trainControl(method = "cv", number = 5),
+                  tuneGrid = data.frame(df = 1:6)
+)
+
+gam_mod.mae_min <- min(gam_mod$results$MAE)
+gam_mod.mae_min
+```
+
+
+## Decision Tree
+Calculate CV MAE for tuned decision tree after trying different tree depths.
+```{r}
+set.seed(123)
+
+dtree <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, 
+               data = data_clean, 
+               trControl = trainControl(method = "cv", number = 5),
+               method = "rpart2",
+               tuneGrid = data.frame(maxdepth = 1:5))
+
+dtree.mae_min <- min(dtree$results$MAE)
+dtree.mae_min
+```
+
+
+## Bagged Trees
+Calculate CV MAE for bagged decision trees.
+```{r}
+set.seed(123)
+
+bag_mod <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, 
+               data = data_clean, 
+               trControl = trainControl(method = "cv", number = 5),
+               method = "treebag",
+               importance = T)
+
+bag_mod.mae_min <- min(bag_mod$results$MAE)
+bag_mod.mae_min
+```
+
+
+## Random Forest
+Calculate CV MAE for tuned random forest after trying different number of variables used in each tree.
+```{r}
+set.seed(123)
+
+rf_mod <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, 
+               data = data_clean, 
+               trControl = trainControl(method = "cv", number = 5),
+               method = "rf",
+               ntree = 100,
+               importance = T,
+               tuneGrid = data.frame(mtry = 1:5))
+
+rf_mod.mae_min <- min(rf_mod$results$MAE)
+rf_mod.mae_min 
+```
+
+
+## Boosted Forest
+Calculate CV MAE for tuned boosted random forest after trying different number of trees, tree depths, and shrinkage parameters.
+```{r}
+set.seed(123)
+
+grid <- expand.grid(interaction.depth = c(1, 3, 5), 
+                    n.trees = c(100, 250, 500),
+                    shrinkage = c(.01, 0.001),
+                    n.minobsinnode = 10)
+
+gbm_mod <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, 
+                 data = data_clean, 
+                 distribution = "gaussian", 
+                 method = "gbm",
+                 trControl = trainControl(method = "cv", number = 5), 
+                 tuneGrid = grid,
+                 verbose = FALSE)
+
+gbm_mod.mae_min <- min(gbm_mod$results$MAE)
+gbm_mod.mae_min
+```
+
+
+## Neural Net
+Calculate CV MAE for tuned neural net after trying different number of nodes and rates of decay.
+```{r}
+set.seed(123)
+
+grid <- expand.grid(size = 1:5,
+                    decay = c(.01, .5, 1))
+
+nn_mod <- train(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes,
+                 data = data_clean,
+                 method = "nnet",
+                 tuneGrid = grid,
+                 trControl = trainControl(method = "cv", number = 5), 
+                 maxit = 500,
+                 linout = TRUE,
+                 verbose = FALSE,
+                 trace = FALSE)
+
+nn_mod.mae_min <- min(nn_mod$results$MAE)
+nn_mod.mae_min
+```
+
+
+
+# 3. Conclusion
+## Summary of Results
+```{r}
+results <- data.frame("Models" = c("Linear Regression (Initial)", "Linear Regression (Tuned)", "Lasso Regression", "GAM", 
+                                   "Decision Tree", "Bagged Trees", "Random Forest", "Boosted Forest", "Neural Net"),
+            "MAE" = c(reg_mod.mae_min, reg_mod2.mae_min, reg_lasso.mae_min, gam_mod.mae_min, 
+                      dtree.mae_min, bag_mod.mae_min, rf_mod.mae_min, gbm_mod.mae_min, nn_mod.mae_min))
+
+results <- results %>%
+  mutate(MAE = round(MAE, 2)) %>%
+  arrange(MAE)
+
+results
+```
+
+Refit tuned linear regression
+```{r}
+reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, data_clean)
+
+summary(reg)
+```
+
+Calculate predictions for tuned linear regression
+```{r}
+data_clean$reg_prediction  <- predict(reg, data_clean)
+```
+
+Calculate final MAE for tuned linear regression and random forest
+```{r}
+data_clean <- data_clean %>%
+  mutate(reg_error  = Overall.Rating - reg_prediction)
+```
+
+```{r outputdata, include = FALSE}
+write.csv(data_clean, file="Output_Data_Clean.csv")
+write.csv(results, file="Output_Results.csv")
+write.csv(reg$coefficients, file="Output_Reg_Coef.csv")
+```

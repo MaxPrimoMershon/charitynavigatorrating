@@ -1,0 +1,202 @@
+---
+title: "Ratings Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    logo: logo.jpg
+    theme: flatly
+    navbar:
+      - {title: "Source Code", href: "https://github.com/MaxPrimoMershon", icon: "fa-github"}
+  runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(ISLR)
+library(tidyverse)
+library(janitor)
+library(broom)
+library(shiny)
+library(nnet)
+theme_set(theme_bw())
+```
+
+
+```{r, include = FALSE}
+data_clean = read.csv("Output_Data_Clean.csv")
+results = read_csv("Output_Results.csv") %>% select(-X1)
+reg_coef = read_csv("Output_Reg_Coef_Clean.csv") 
+```
+
+
+```{r, include = FALSE}
+model <- nnet(Overall.Rating ~ Program.Expenses + 
+                              Audited.financials.prepared.by.independent.accountant +
+                              Fundraising.Expenses +
+                              Fundraising.Efficiency +
+                              Administrative.Expenses +
+                              Working.Capital.Ratio..years.  +
+                              Program.Expenses.Growth +
+                              Liabilities.to.Assets  +
+                              Independent.Voting.Board.Members +
+                              Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.parties +
+                              Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filing +
+                              Conflict.of.Interest.Policy +
+                              Whistleblower.Policy +
+                              Records.Retention.and.Destruction.Policy +
+                              CEO.listed.with.salary +
+                              Process.for.determining.CEO.compensation +
+                              Board.Listed...Board.Members.Not.Compensated +
+                              Donor.Privacy.Policy +
+                              Board.Members.Listed +
+                              Audited.Financials +
+                              Form.990 +
+                              Key.staff.listed,
+               data_clean,
+               size = 5,
+               decay = 1,
+               linout = TRUE,
+               maxit = 1000,
+               trace = FALSE)
+```
+
+
+Calculator {data-icon="fa-calculator"}
+=====================================  
+
+```{r}
+# Source: https://stackoverflow.com/questions/53062317/predicting-from-user-inputs-shiny
+ui = 
+  fluidPage(
+  fluidRow(
+        tags$head(
+          tags$style(type="text/css", 
+            "label{ display: table-cell; text-align: left; vertical-align: middle; font-weight:normal; } 
+            .form-group { display: table-row;}
+            ")
+        ),
+                column(4,
+                  strong("Financial Metrics"),
+                  numericInput(inputId='Program.Expenses', label='Program Expenses (%)', value = .80,min = 0, max = 1, step = .1,width = NULL),
+                  numericInput(inputId='Fundraising.Expenses', label='Fundraising Expenses (%)', value = .08,min = 0, max = 1, step = .01,width = NULL),
+                  numericInput(inputId='Administrative.Expenses', label='Administrative Expenses (%)', value = .1,min = 0, max = 1, step = .1,width = NULL),
+                  numericInput(inputId='Fundraising.Efficiency', label='Fundraising Efficiency ($)', value = .10,min = 0, max = 100, step = .1,width = NULL),
+                  numericInput(inputId='Working.Capital.Ratio..years.', label='Working Capital Ratio (yrs.)', value = 1.20,min = 100, max = 100, step = .1,width = NULL),
+                  numericInput(inputId='Program.Expenses.Growth', label='Program Expenses Growth (%) ', value = .05,min = 0, max = 100, step = .01,width = NULL),
+                  numericInput(inputId='Liabilities.to.Assets', label='Liabilities to Assets (%)', value = .10,min = 0, max = 100, step = .1,width = NULL),
+                  br(),
+                  strong("On Website?"),
+                  checkboxInput(inputId='Donor.Privacy.Policy', label='Donor Privacy Policy', value = FALSE, width = NULL),
+                  checkboxInput(inputId='Board.Members.Listed', label='Board Listed', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Audited.Financials', label='Audited Financials', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Form.990', label='Form 990', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Key.staff.listed', label='Key Staff Listed', value = TRUE, width = NULL)),
+                column(4,strong("On Form 990?"),
+                  checkboxInput(inputId='Independent.Voting.Board.Members', label='Indepedent Voting Board', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Audited.financials.prepared.by.independent.accountant', label='Audited Financials', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.parties', label='Loan to Related Parties', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filing', label='Form 990 in advance', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Conflict.of.Interest.Policy', label='Conflict of Interest Policy', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Whistleblower.Policy', label='Whistleblower Policy', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Records.Retention.and.Destruction.Policy', label='Records Retention Policy', value = TRUE, width = NULL),
+                  checkboxInput(inputId='CEO.listed.with.salary', label='CEO listed with salary', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Process.for.determining.CEO.compensation', label='Process for CEO Compensation', value = TRUE, width = NULL),
+                  checkboxInput(inputId='Board.Listed...Board.Members.Not.Compensated', label='Board Listed', value = TRUE, width = NULL)
+                  ),
+                sidebarPanel(
+                       h1(textOutput("Pred", inline = TRUE),icon("award", lib = "font-awesome")),
+                       h3("Predicted Rating"),
+                       br()))
+)
+
+server = function (input,output) {
+  data <- reactive({
+    req(input$Program.Expenses)
+    data.frame(Program.Expenses =input$Program.Expenses,
+               Audited.financials.prepared.by.independent.accountant = input$Audited.financials.prepared.by.independent.accountant,
+                Fundraising.Expenses = input$Fundraising.Expenses ,
+                Administrative.Expenses = input$Administrative.Expenses ,
+                Fundraising.Efficiency = input$Fundraising.Efficiency ,
+                Working.Capital.Ratio..years. = input$Working.Capital.Ratio..years. ,
+                Program.Expenses.Growth = input$Program.Expenses.Growth ,
+                Liabilities.to.Assets = input$Liabilities.to.Assets ,
+                Independent.Voting.Board.Members = input$Independent.Voting.Board.Members ,
+                Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.parties = input$Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.parties ,
+                Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filing = input$Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filing ,
+                Conflict.of.Interest.Policy = input$Conflict.of.Interest.Policy ,
+                Whistleblower.Policy = input$Whistleblower.Policy ,
+                Records.Retention.and.Destruction.Policy = input$Records.Retention.and.Destruction.Policy ,
+                CEO.listed.with.salary = input$CEO.listed.with.salary ,
+                Process.for.determining.CEO.compensation = input$Process.for.determining.CEO.compensation ,
+                Board.Listed...Board.Members.Not.Compensated = input$Board.Listed...Board.Members.Not.Compensated ,
+               Donor.Privacy.Policy = input$Donor.Privacy.Policy  ,
+                Board.Members.Listed = input$Board.Members.Listed ,
+                Audited.Financials = input$Audited.Financials ,
+                Form.990 = input$Form.990 ,
+                Key.staff.listed = input$Key.staff.listed
+               )
+    })
+
+  pred <- reactive({
+    round(predict(model,data()),1)
+  })
+
+  output$Pred <- renderText(pred())
+}
+
+shinyApp(ui=ui,server=server)
+
+```
+
+
+Analysis {data-icon="fa-chart-bar"}
+=====================================  
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Models Ranked by Prediction Error
+```{r, fig.width=10}
+results$Models <- factor(results$Models, levels = results$Models[order(-results$MAE)] )
+ggplot(results, aes(x = Models, y = MAE)) + 
+  geom_col(fill = "#18BC9C", alpha = .5) +
+  coord_flip() + 
+  geom_text(aes(label = round(MAE,2)), hjust=0, size = 6) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20))
+```
+
+### Distribution of Ratings
+```{r, fig.width=10}
+ggplot(data_clean, aes(x=Overall.Rating)) + 
+  geom_histogram(fill = "#18BC9C", alpha = .5)  +
+  ylab("Count") +
+  xlab("Rating") +
+  scale_x_continuous(breaks = seq(20, 100, by = 10)) +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20))
+```
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Variable Coefficients in Linear Regression (Tuned)
+```{r, fig.width=10, fig.height=10}
+reg_coef$X1 <- factor(reg_coef$X1, levels = reg_coef$X1[order(abs(reg_coef$x))] )
+reg_coef <- reg_coef[reg_coef$X1 != '(Intercept)', ]
+
+ggplot(reg_coef, aes(X1, x)) + 
+  geom_col(fill = "#18BC9C", alpha = .5) +
+  coord_flip() +
+  ylab("Coefficient") +
+  xlab("Variable")  + 
+  geom_text(aes(label = round(x,2)), hjust=0, size = 6) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20))
+```
+

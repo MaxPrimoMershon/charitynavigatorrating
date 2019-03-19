@@ -1,0 +1,10 @@
+"","Models","MAE"
+"1","Neural Net",1.48
+"2","Random Forest",1.5
+"3","Boosted Forest",1.58
+"4","GAM",1.81
+"5","Linear Regression (Tuned)",2.31
+"6","Lasso Regression",2.31
+"7","Linear Regression (Initial)",2.57
+"8","Bagged Trees",3.02
+"9","Decision Tree",3.44
