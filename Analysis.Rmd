@@ -134,19 +134,19 @@ data_clean <- data_clean %>%
 Refit model
 ```{r}
 reg <- lm(Overall.Rating ~ . - ID, data_clean)
-summary(reg)
+tidy(summary(reg))
 ```
 
 Remove `No.Material.diversion.of.assets` and `Documents.Board.Meeting.Minutes` because all values are True and then refit.
 ```{r}
 reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, data_clean)
-summary(reg)
+tidy(summary(reg))
 ```
 
 Remove `Administrative.Expenses` because highest statistically insignificant pvalue and refit.
 ```{r}
 reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, data_clean)
-summary(reg)
+tidy(summary(reg))
 ```
 
 Plot results.
@@ -332,8 +332,7 @@ results
 Refit tuned linear regression
 ```{r}
 reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, data_clean)
-
-summary(reg)
+tidy(summary(reg))
 ```
 
 Calculate predictions for tuned linear regression

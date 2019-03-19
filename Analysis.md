@@ -194,438 +194,67 @@ Refit model
 
 ``` r
 reg <- lm(Overall.Rating ~ . - ID, data_clean)
-summary(reg)
+tidy(summary(reg))
 ```
 
-    ## 
-    ## Call:
-    ## lm(formula = Overall.Rating ~ . - ID, data = data_clean)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -43.359  -1.676   0.290   1.968  18.616 
-    ## 
-    ## Coefficients: (2 not defined because of singularities)
-    ##                                                                                      Estimate
-    ## (Intercept)                                                                          42.33457
-    ## Program.Expenses                                                                     17.56116
-    ## Administrative.Expenses                                                             -12.48708
-    ## Fundraising.Expenses                                                                -26.11212
-    ## Fundraising.Efficiency                                                              -10.00602
-    ## Working.Capital.Ratio..years.                                                         0.21495
-    ## Program.Expenses.Growth                                                              14.13031
-    ## Liabilities.to.Assets                                                                -9.80809
-    ## Independent.Voting.Board.MembersTRUE                                                  8.43533
-    ## No.Material.diversion.of.assetsTRUE                                                        NA
-    ## Audited.financials.prepared.by.independent.accountantTRUE                             6.27476
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               1.28369
-    ## Documents.Board.Meeting.MinutesTRUE                                                        NA
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE   1.64655
-    ## Conflict.of.Interest.PolicyTRUE                                                       2.54408
-    ## Whistleblower.PolicyTRUE                                                              2.64338
-    ## Records.Retention.and.Destruction.PolicyTRUE                                          2.01012
-    ## CEO.listed.with.salaryTRUE                                                            2.42641
-    ## Process.for.determining.CEO.compensationTRUE                                          2.28779
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      1.48582
-    ## Donor.Privacy.PolicyTRUE                                                              1.03392
-    ## Board.Members.ListedTRUE                                                              2.71918
-    ## Audited.FinancialsTRUE                                                                1.69714
-    ## Form.990TRUE                                                                          1.09611
-    ## Key.staff.listedTRUE                                                                  2.15486
-    ##                                                                                     Std. Error
-    ## (Intercept)                                                                           71.23559
-    ## Program.Expenses                                                                      71.34189
-    ## Administrative.Expenses                                                               71.34427
-    ## Fundraising.Expenses                                                                  71.33676
-    ## Fundraising.Efficiency                                                                 0.62992
-    ## Working.Capital.Ratio..years.                                                          0.01653
-    ## Program.Expenses.Growth                                                                0.31539
-    ## Liabilities.to.Assets                                                                  0.21479
-    ## Independent.Voting.Board.MembersTRUE                                                   0.21824
-    ## No.Material.diversion.of.assetsTRUE                                                         NA
-    ## Audited.financials.prepared.by.independent.accountantTRUE                              0.14291
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE                0.21165
-    ## Documents.Board.Meeting.MinutesTRUE                                                         NA
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE    0.13422
-    ## Conflict.of.Interest.PolicyTRUE                                                        0.29740
-    ## Whistleblower.PolicyTRUE                                                               0.19413
-    ## Records.Retention.and.Destruction.PolicyTRUE                                           0.17889
-    ## CEO.listed.with.salaryTRUE                                                             0.17217
-    ## Process.for.determining.CEO.compensationTRUE                                           0.15949
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                       0.31867
-    ## Donor.Privacy.PolicyTRUE                                                               0.08138
-    ## Board.Members.ListedTRUE                                                               0.16901
-    ## Audited.FinancialsTRUE                                                                 0.11058
-    ## Form.990TRUE                                                                           0.10989
-    ## Key.staff.listedTRUE                                                                   0.16923
-    ##                                                                                     t value
-    ## (Intercept)                                                                           0.594
-    ## Program.Expenses                                                                      0.246
-    ## Administrative.Expenses                                                              -0.175
-    ## Fundraising.Expenses                                                                 -0.366
-    ## Fundraising.Efficiency                                                              -15.885
-    ## Working.Capital.Ratio..years.                                                        13.007
-    ## Program.Expenses.Growth                                                              44.803
-    ## Liabilities.to.Assets                                                               -45.664
-    ## Independent.Voting.Board.MembersTRUE                                                 38.652
-    ## No.Material.diversion.of.assetsTRUE                                                      NA
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            43.906
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               6.065
-    ## Documents.Board.Meeting.MinutesTRUE                                                      NA
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  12.268
-    ## Conflict.of.Interest.PolicyTRUE                                                       8.554
-    ## Whistleblower.PolicyTRUE                                                             13.617
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         11.237
-    ## CEO.listed.with.salaryTRUE                                                           14.093
-    ## Process.for.determining.CEO.compensationTRUE                                         14.345
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      4.663
-    ## Donor.Privacy.PolicyTRUE                                                             12.704
-    ## Board.Members.ListedTRUE                                                             16.089
-    ## Audited.FinancialsTRUE                                                               15.348
-    ## Form.990TRUE                                                                          9.975
-    ## Key.staff.listedTRUE                                                                 12.733
-    ##                                                                                     Pr(>|t|)
-    ## (Intercept)                                                                            0.552
-    ## Program.Expenses                                                                       0.806
-    ## Administrative.Expenses                                                                0.861
-    ## Fundraising.Expenses                                                                   0.714
-    ## Fundraising.Efficiency                                                               < 2e-16
-    ## Working.Capital.Ratio..years.                                                        < 2e-16
-    ## Program.Expenses.Growth                                                              < 2e-16
-    ## Liabilities.to.Assets                                                                < 2e-16
-    ## Independent.Voting.Board.MembersTRUE                                                 < 2e-16
-    ## No.Material.diversion.of.assetsTRUE                                                       NA
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            < 2e-16
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             1.38e-09
-    ## Documents.Board.Meeting.MinutesTRUE                                                       NA
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  < 2e-16
-    ## Conflict.of.Interest.PolicyTRUE                                                      < 2e-16
-    ## Whistleblower.PolicyTRUE                                                             < 2e-16
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         < 2e-16
-    ## CEO.listed.with.salaryTRUE                                                           < 2e-16
-    ## Process.for.determining.CEO.compensationTRUE                                         < 2e-16
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    3.17e-06
-    ## Donor.Privacy.PolicyTRUE                                                             < 2e-16
-    ## Board.Members.ListedTRUE                                                             < 2e-16
-    ## Audited.FinancialsTRUE                                                               < 2e-16
-    ## Form.990TRUE                                                                         < 2e-16
-    ## Key.staff.listedTRUE                                                                 < 2e-16
-    ##                                                                                        
-    ## (Intercept)                                                                            
-    ## Program.Expenses                                                                       
-    ## Administrative.Expenses                                                                
-    ## Fundraising.Expenses                                                                   
-    ## Fundraising.Efficiency                                                              ***
-    ## Working.Capital.Ratio..years.                                                       ***
-    ## Program.Expenses.Growth                                                             ***
-    ## Liabilities.to.Assets                                                               ***
-    ## Independent.Voting.Board.MembersTRUE                                                ***
-    ## No.Material.diversion.of.assetsTRUE                                                    
-    ## Audited.financials.prepared.by.independent.accountantTRUE                           ***
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             ***
-    ## Documents.Board.Meeting.MinutesTRUE                                                    
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE ***
-    ## Conflict.of.Interest.PolicyTRUE                                                     ***
-    ## Whistleblower.PolicyTRUE                                                            ***
-    ## Records.Retention.and.Destruction.PolicyTRUE                                        ***
-    ## CEO.listed.with.salaryTRUE                                                          ***
-    ## Process.for.determining.CEO.compensationTRUE                                        ***
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    ***
-    ## Donor.Privacy.PolicyTRUE                                                            ***
-    ## Board.Members.ListedTRUE                                                            ***
-    ## Audited.FinancialsTRUE                                                              ***
-    ## Form.990TRUE                                                                        ***
-    ## Key.staff.listedTRUE                                                                ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 3.166 on 7707 degrees of freedom
-    ## Multiple R-squared:  0.832,  Adjusted R-squared:  0.8315 
-    ## F-statistic:  1734 on 22 and 7707 DF,  p-value: < 2.2e-16
+    ## # A tibble: 23 x 5
+    ##    term                              estimate std.error statistic   p.value
+    ##    <chr>                                <dbl>     <dbl>     <dbl>     <dbl>
+    ##  1 (Intercept)                         42.3     71.2        0.594 5.52e-  1
+    ##  2 Program.Expenses                    17.6     71.3        0.246 8.06e-  1
+    ##  3 Administrative.Expenses            -12.5     71.3       -0.175 8.61e-  1
+    ##  4 Fundraising.Expenses               -26.1     71.3       -0.366 7.14e-  1
+    ##  5 Fundraising.Efficiency             -10.0      0.630    -15.9   6.21e- 56
+    ##  6 Working.Capital.Ratio..years.        0.215    0.0165    13.0   2.83e- 38
+    ##  7 Program.Expenses.Growth             14.1      0.315     44.8   0.       
+    ##  8 Liabilities.to.Assets               -9.81     0.215    -45.7   0.       
+    ##  9 Independent.Voting.Board.Members~    8.44     0.218     38.7   6.78e-299
+    ## 10 Audited.financials.prepared.by.i~    6.27     0.143     43.9   0.       
+    ## # ... with 13 more rows
 
 Remove `No.Material.diversion.of.assets` and `Documents.Board.Meeting.Minutes` because all values are True and then refit.
 
 ``` r
 reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes, data_clean)
-summary(reg)
+tidy(summary(reg))
 ```
 
-    ## 
-    ## Call:
-    ## lm(formula = Overall.Rating ~ . - ID - No.Material.diversion.of.assets - 
-    ##     Documents.Board.Meeting.Minutes, data = data_clean)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -43.359  -1.676   0.290   1.968  18.616 
-    ## 
-    ## Coefficients:
-    ##                                                                                      Estimate
-    ## (Intercept)                                                                          42.33457
-    ## Program.Expenses                                                                     17.56116
-    ## Administrative.Expenses                                                             -12.48708
-    ## Fundraising.Expenses                                                                -26.11212
-    ## Fundraising.Efficiency                                                              -10.00602
-    ## Working.Capital.Ratio..years.                                                         0.21495
-    ## Program.Expenses.Growth                                                              14.13031
-    ## Liabilities.to.Assets                                                                -9.80809
-    ## Independent.Voting.Board.MembersTRUE                                                  8.43533
-    ## Audited.financials.prepared.by.independent.accountantTRUE                             6.27476
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               1.28369
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE   1.64655
-    ## Conflict.of.Interest.PolicyTRUE                                                       2.54408
-    ## Whistleblower.PolicyTRUE                                                              2.64338
-    ## Records.Retention.and.Destruction.PolicyTRUE                                          2.01012
-    ## CEO.listed.with.salaryTRUE                                                            2.42641
-    ## Process.for.determining.CEO.compensationTRUE                                          2.28779
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      1.48582
-    ## Donor.Privacy.PolicyTRUE                                                              1.03392
-    ## Board.Members.ListedTRUE                                                              2.71918
-    ## Audited.FinancialsTRUE                                                                1.69714
-    ## Form.990TRUE                                                                          1.09611
-    ## Key.staff.listedTRUE                                                                  2.15486
-    ##                                                                                     Std. Error
-    ## (Intercept)                                                                           71.23559
-    ## Program.Expenses                                                                      71.34189
-    ## Administrative.Expenses                                                               71.34427
-    ## Fundraising.Expenses                                                                  71.33676
-    ## Fundraising.Efficiency                                                                 0.62992
-    ## Working.Capital.Ratio..years.                                                          0.01653
-    ## Program.Expenses.Growth                                                                0.31539
-    ## Liabilities.to.Assets                                                                  0.21479
-    ## Independent.Voting.Board.MembersTRUE                                                   0.21824
-    ## Audited.financials.prepared.by.independent.accountantTRUE                              0.14291
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE                0.21165
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE    0.13422
-    ## Conflict.of.Interest.PolicyTRUE                                                        0.29740
-    ## Whistleblower.PolicyTRUE                                                               0.19413
-    ## Records.Retention.and.Destruction.PolicyTRUE                                           0.17889
-    ## CEO.listed.with.salaryTRUE                                                             0.17217
-    ## Process.for.determining.CEO.compensationTRUE                                           0.15949
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                       0.31867
-    ## Donor.Privacy.PolicyTRUE                                                               0.08138
-    ## Board.Members.ListedTRUE                                                               0.16901
-    ## Audited.FinancialsTRUE                                                                 0.11058
-    ## Form.990TRUE                                                                           0.10989
-    ## Key.staff.listedTRUE                                                                   0.16923
-    ##                                                                                     t value
-    ## (Intercept)                                                                           0.594
-    ## Program.Expenses                                                                      0.246
-    ## Administrative.Expenses                                                              -0.175
-    ## Fundraising.Expenses                                                                 -0.366
-    ## Fundraising.Efficiency                                                              -15.885
-    ## Working.Capital.Ratio..years.                                                        13.007
-    ## Program.Expenses.Growth                                                              44.803
-    ## Liabilities.to.Assets                                                               -45.664
-    ## Independent.Voting.Board.MembersTRUE                                                 38.652
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            43.906
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               6.065
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  12.268
-    ## Conflict.of.Interest.PolicyTRUE                                                       8.554
-    ## Whistleblower.PolicyTRUE                                                             13.617
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         11.237
-    ## CEO.listed.with.salaryTRUE                                                           14.093
-    ## Process.for.determining.CEO.compensationTRUE                                         14.345
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      4.663
-    ## Donor.Privacy.PolicyTRUE                                                             12.704
-    ## Board.Members.ListedTRUE                                                             16.089
-    ## Audited.FinancialsTRUE                                                               15.348
-    ## Form.990TRUE                                                                          9.975
-    ## Key.staff.listedTRUE                                                                 12.733
-    ##                                                                                     Pr(>|t|)
-    ## (Intercept)                                                                            0.552
-    ## Program.Expenses                                                                       0.806
-    ## Administrative.Expenses                                                                0.861
-    ## Fundraising.Expenses                                                                   0.714
-    ## Fundraising.Efficiency                                                               < 2e-16
-    ## Working.Capital.Ratio..years.                                                        < 2e-16
-    ## Program.Expenses.Growth                                                              < 2e-16
-    ## Liabilities.to.Assets                                                                < 2e-16
-    ## Independent.Voting.Board.MembersTRUE                                                 < 2e-16
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            < 2e-16
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             1.38e-09
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  < 2e-16
-    ## Conflict.of.Interest.PolicyTRUE                                                      < 2e-16
-    ## Whistleblower.PolicyTRUE                                                             < 2e-16
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         < 2e-16
-    ## CEO.listed.with.salaryTRUE                                                           < 2e-16
-    ## Process.for.determining.CEO.compensationTRUE                                         < 2e-16
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    3.17e-06
-    ## Donor.Privacy.PolicyTRUE                                                             < 2e-16
-    ## Board.Members.ListedTRUE                                                             < 2e-16
-    ## Audited.FinancialsTRUE                                                               < 2e-16
-    ## Form.990TRUE                                                                         < 2e-16
-    ## Key.staff.listedTRUE                                                                 < 2e-16
-    ##                                                                                        
-    ## (Intercept)                                                                            
-    ## Program.Expenses                                                                       
-    ## Administrative.Expenses                                                                
-    ## Fundraising.Expenses                                                                   
-    ## Fundraising.Efficiency                                                              ***
-    ## Working.Capital.Ratio..years.                                                       ***
-    ## Program.Expenses.Growth                                                             ***
-    ## Liabilities.to.Assets                                                               ***
-    ## Independent.Voting.Board.MembersTRUE                                                ***
-    ## Audited.financials.prepared.by.independent.accountantTRUE                           ***
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             ***
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE ***
-    ## Conflict.of.Interest.PolicyTRUE                                                     ***
-    ## Whistleblower.PolicyTRUE                                                            ***
-    ## Records.Retention.and.Destruction.PolicyTRUE                                        ***
-    ## CEO.listed.with.salaryTRUE                                                          ***
-    ## Process.for.determining.CEO.compensationTRUE                                        ***
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    ***
-    ## Donor.Privacy.PolicyTRUE                                                            ***
-    ## Board.Members.ListedTRUE                                                            ***
-    ## Audited.FinancialsTRUE                                                              ***
-    ## Form.990TRUE                                                                        ***
-    ## Key.staff.listedTRUE                                                                ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 3.166 on 7707 degrees of freedom
-    ## Multiple R-squared:  0.832,  Adjusted R-squared:  0.8315 
-    ## F-statistic:  1734 on 22 and 7707 DF,  p-value: < 2.2e-16
+    ## # A tibble: 23 x 5
+    ##    term                              estimate std.error statistic   p.value
+    ##    <chr>                                <dbl>     <dbl>     <dbl>     <dbl>
+    ##  1 (Intercept)                         42.3     71.2        0.594 5.52e-  1
+    ##  2 Program.Expenses                    17.6     71.3        0.246 8.06e-  1
+    ##  3 Administrative.Expenses            -12.5     71.3       -0.175 8.61e-  1
+    ##  4 Fundraising.Expenses               -26.1     71.3       -0.366 7.14e-  1
+    ##  5 Fundraising.Efficiency             -10.0      0.630    -15.9   6.21e- 56
+    ##  6 Working.Capital.Ratio..years.        0.215    0.0165    13.0   2.83e- 38
+    ##  7 Program.Expenses.Growth             14.1      0.315     44.8   0.       
+    ##  8 Liabilities.to.Assets               -9.81     0.215    -45.7   0.       
+    ##  9 Independent.Voting.Board.Members~    8.44     0.218     38.7   6.78e-299
+    ## 10 Audited.financials.prepared.by.i~    6.27     0.143     43.9   0.       
+    ## # ... with 13 more rows
 
 Remove `Administrative.Expenses` because highest statistically insignificant pvalue and refit.
 
 ``` r
 reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, data_clean)
-summary(reg)
+tidy(summary(reg))
 ```
 
-    ## 
-    ## Call:
-    ## lm(formula = Overall.Rating ~ . - ID - No.Material.diversion.of.assets - 
-    ##     Documents.Board.Meeting.Minutes - Administrative.Expenses, 
-    ##     data = data_clean)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -43.352  -1.677   0.290   1.972  18.610 
-    ## 
-    ## Coefficients:
-    ##                                                                                      Estimate
-    ## (Intercept)                                                                          29.86717
-    ## Program.Expenses                                                                     30.04734
-    ## Fundraising.Expenses                                                                -13.62756
-    ## Fundraising.Efficiency                                                              -10.00506
-    ## Working.Capital.Ratio..years.                                                         0.21492
-    ## Program.Expenses.Growth                                                              14.12980
-    ## Liabilities.to.Assets                                                                -9.80872
-    ## Independent.Voting.Board.MembersTRUE                                                  8.43502
-    ## Audited.financials.prepared.by.independent.accountantTRUE                             6.27520
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               1.28339
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE   1.64611
-    ## Conflict.of.Interest.PolicyTRUE                                                       2.54363
-    ## Whistleblower.PolicyTRUE                                                              2.64365
-    ## Records.Retention.and.Destruction.PolicyTRUE                                          2.01014
-    ## CEO.listed.with.salaryTRUE                                                            2.42648
-    ## Process.for.determining.CEO.compensationTRUE                                          2.28763
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      1.48717
-    ## Donor.Privacy.PolicyTRUE                                                              1.03390
-    ## Board.Members.ListedTRUE                                                              2.71935
-    ## Audited.FinancialsTRUE                                                                1.69688
-    ## Form.990TRUE                                                                          1.09615
-    ## Key.staff.listedTRUE                                                                  2.15444
-    ##                                                                                     Std. Error
-    ## (Intercept)                                                                            0.73395
-    ## Program.Expenses                                                                       0.62905
-    ## Fundraising.Expenses                                                                   0.99112
-    ## Fundraising.Efficiency                                                                 0.62985
-    ## Working.Capital.Ratio..years.                                                          0.01652
-    ## Program.Expenses.Growth                                                                0.31535
-    ## Liabilities.to.Assets                                                                  0.21475
-    ## Independent.Voting.Board.MembersTRUE                                                   0.21822
-    ## Audited.financials.prepared.by.independent.accountantTRUE                              0.14288
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE                0.21163
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE    0.13419
-    ## Conflict.of.Interest.PolicyTRUE                                                        0.29737
-    ## Whistleblower.PolicyTRUE                                                               0.19411
-    ## Records.Retention.and.Destruction.PolicyTRUE                                           0.17888
-    ## CEO.listed.with.salaryTRUE                                                             0.17216
-    ## Process.for.determining.CEO.compensationTRUE                                           0.15947
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                       0.31855
-    ## Donor.Privacy.PolicyTRUE                                                               0.08138
-    ## Board.Members.ListedTRUE                                                               0.16899
-    ## Audited.FinancialsTRUE                                                                 0.11056
-    ## Form.990TRUE                                                                           0.10988
-    ## Key.staff.listedTRUE                                                                   0.16920
-    ##                                                                                     t value
-    ## (Intercept)                                                                          40.694
-    ## Program.Expenses                                                                     47.766
-    ## Fundraising.Expenses                                                                -13.750
-    ## Fundraising.Efficiency                                                              -15.885
-    ## Working.Capital.Ratio..years.                                                        13.006
-    ## Program.Expenses.Growth                                                              44.806
-    ## Liabilities.to.Assets                                                               -45.676
-    ## Independent.Voting.Board.MembersTRUE                                                 38.654
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            43.918
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               6.064
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  12.267
-    ## Conflict.of.Interest.PolicyTRUE                                                       8.554
-    ## Whistleblower.PolicyTRUE                                                             13.619
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         11.238
-    ## CEO.listed.with.salaryTRUE                                                           14.094
-    ## Process.for.determining.CEO.compensationTRUE                                         14.345
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      4.669
-    ## Donor.Privacy.PolicyTRUE                                                             12.705
-    ## Board.Members.ListedTRUE                                                             16.092
-    ## Audited.FinancialsTRUE                                                               15.348
-    ## Form.990TRUE                                                                          9.976
-    ## Key.staff.listedTRUE                                                                 12.733
-    ##                                                                                     Pr(>|t|)
-    ## (Intercept)                                                                          < 2e-16
-    ## Program.Expenses                                                                     < 2e-16
-    ## Fundraising.Expenses                                                                 < 2e-16
-    ## Fundraising.Efficiency                                                               < 2e-16
-    ## Working.Capital.Ratio..years.                                                        < 2e-16
-    ## Program.Expenses.Growth                                                              < 2e-16
-    ## Liabilities.to.Assets                                                                < 2e-16
-    ## Independent.Voting.Board.MembersTRUE                                                 < 2e-16
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            < 2e-16
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             1.39e-09
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  < 2e-16
-    ## Conflict.of.Interest.PolicyTRUE                                                      < 2e-16
-    ## Whistleblower.PolicyTRUE                                                             < 2e-16
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         < 2e-16
-    ## CEO.listed.with.salaryTRUE                                                           < 2e-16
-    ## Process.for.determining.CEO.compensationTRUE                                         < 2e-16
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    3.08e-06
-    ## Donor.Privacy.PolicyTRUE                                                             < 2e-16
-    ## Board.Members.ListedTRUE                                                             < 2e-16
-    ## Audited.FinancialsTRUE                                                               < 2e-16
-    ## Form.990TRUE                                                                         < 2e-16
-    ## Key.staff.listedTRUE                                                                 < 2e-16
-    ##                                                                                        
-    ## (Intercept)                                                                         ***
-    ## Program.Expenses                                                                    ***
-    ## Fundraising.Expenses                                                                ***
-    ## Fundraising.Efficiency                                                              ***
-    ## Working.Capital.Ratio..years.                                                       ***
-    ## Program.Expenses.Growth                                                             ***
-    ## Liabilities.to.Assets                                                               ***
-    ## Independent.Voting.Board.MembersTRUE                                                ***
-    ## Audited.financials.prepared.by.independent.accountantTRUE                           ***
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             ***
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE ***
-    ## Conflict.of.Interest.PolicyTRUE                                                     ***
-    ## Whistleblower.PolicyTRUE                                                            ***
-    ## Records.Retention.and.Destruction.PolicyTRUE                                        ***
-    ## CEO.listed.with.salaryTRUE                                                          ***
-    ## Process.for.determining.CEO.compensationTRUE                                        ***
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    ***
-    ## Donor.Privacy.PolicyTRUE                                                            ***
-    ## Board.Members.ListedTRUE                                                            ***
-    ## Audited.FinancialsTRUE                                                              ***
-    ## Form.990TRUE                                                                        ***
-    ## Key.staff.listedTRUE                                                                ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 3.166 on 7708 degrees of freedom
-    ## Multiple R-squared:  0.832,  Adjusted R-squared:  0.8315 
-    ## F-statistic:  1817 on 21 and 7708 DF,  p-value: < 2.2e-16
+    ## # A tibble: 22 x 5
+    ##    term                              estimate std.error statistic   p.value
+    ##    <chr>                                <dbl>     <dbl>     <dbl>     <dbl>
+    ##  1 (Intercept)                         29.9      0.734      40.7  0.       
+    ##  2 Program.Expenses                    30.0      0.629      47.8  0.       
+    ##  3 Fundraising.Expenses               -13.6      0.991     -13.7  1.62e- 42
+    ##  4 Fundraising.Efficiency             -10.0      0.630     -15.9  6.20e- 56
+    ##  5 Working.Capital.Ratio..years.        0.215    0.0165     13.0  2.84e- 38
+    ##  6 Program.Expenses.Growth             14.1      0.315      44.8  0.       
+    ##  7 Liabilities.to.Assets               -9.81     0.215     -45.7  0.       
+    ##  8 Independent.Voting.Board.Members~    8.44     0.218      38.7  6.25e-299
+    ##  9 Audited.financials.prepared.by.i~    6.28     0.143      43.9  0.       
+    ## 10 Does.Not.Provide.Loan.s..to.or.R~    1.28     0.212       6.06 1.39e-  9
+    ## # ... with 12 more rows
 
 Plot results.
 
@@ -883,142 +512,23 @@ Refit tuned linear regression
 
 ``` r
 reg <- lm(Overall.Rating ~ . - ID - No.Material.diversion.of.assets - Documents.Board.Meeting.Minutes - Administrative.Expenses, data_clean)
-
-summary(reg)
+tidy(summary(reg))
 ```
 
-    ## 
-    ## Call:
-    ## lm(formula = Overall.Rating ~ . - ID - No.Material.diversion.of.assets - 
-    ##     Documents.Board.Meeting.Minutes - Administrative.Expenses, 
-    ##     data = data_clean)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -43.352  -1.677   0.290   1.972  18.610 
-    ## 
-    ## Coefficients:
-    ##                                                                                      Estimate
-    ## (Intercept)                                                                          29.86717
-    ## Program.Expenses                                                                     30.04734
-    ## Fundraising.Expenses                                                                -13.62756
-    ## Fundraising.Efficiency                                                              -10.00506
-    ## Working.Capital.Ratio..years.                                                         0.21492
-    ## Program.Expenses.Growth                                                              14.12980
-    ## Liabilities.to.Assets                                                                -9.80872
-    ## Independent.Voting.Board.MembersTRUE                                                  8.43502
-    ## Audited.financials.prepared.by.independent.accountantTRUE                             6.27520
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               1.28339
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE   1.64611
-    ## Conflict.of.Interest.PolicyTRUE                                                       2.54363
-    ## Whistleblower.PolicyTRUE                                                              2.64365
-    ## Records.Retention.and.Destruction.PolicyTRUE                                          2.01014
-    ## CEO.listed.with.salaryTRUE                                                            2.42648
-    ## Process.for.determining.CEO.compensationTRUE                                          2.28763
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      1.48717
-    ## Donor.Privacy.PolicyTRUE                                                              1.03390
-    ## Board.Members.ListedTRUE                                                              2.71935
-    ## Audited.FinancialsTRUE                                                                1.69688
-    ## Form.990TRUE                                                                          1.09615
-    ## Key.staff.listedTRUE                                                                  2.15444
-    ##                                                                                     Std. Error
-    ## (Intercept)                                                                            0.73395
-    ## Program.Expenses                                                                       0.62905
-    ## Fundraising.Expenses                                                                   0.99112
-    ## Fundraising.Efficiency                                                                 0.62985
-    ## Working.Capital.Ratio..years.                                                          0.01652
-    ## Program.Expenses.Growth                                                                0.31535
-    ## Liabilities.to.Assets                                                                  0.21475
-    ## Independent.Voting.Board.MembersTRUE                                                   0.21822
-    ## Audited.financials.prepared.by.independent.accountantTRUE                              0.14288
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE                0.21163
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE    0.13419
-    ## Conflict.of.Interest.PolicyTRUE                                                        0.29737
-    ## Whistleblower.PolicyTRUE                                                               0.19411
-    ## Records.Retention.and.Destruction.PolicyTRUE                                           0.17888
-    ## CEO.listed.with.salaryTRUE                                                             0.17216
-    ## Process.for.determining.CEO.compensationTRUE                                           0.15947
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                       0.31855
-    ## Donor.Privacy.PolicyTRUE                                                               0.08138
-    ## Board.Members.ListedTRUE                                                               0.16899
-    ## Audited.FinancialsTRUE                                                                 0.11056
-    ## Form.990TRUE                                                                           0.10988
-    ## Key.staff.listedTRUE                                                                   0.16920
-    ##                                                                                     t value
-    ## (Intercept)                                                                          40.694
-    ## Program.Expenses                                                                     47.766
-    ## Fundraising.Expenses                                                                -13.750
-    ## Fundraising.Efficiency                                                              -15.885
-    ## Working.Capital.Ratio..years.                                                        13.006
-    ## Program.Expenses.Growth                                                              44.806
-    ## Liabilities.to.Assets                                                               -45.676
-    ## Independent.Voting.Board.MembersTRUE                                                 38.654
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            43.918
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE               6.064
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  12.267
-    ## Conflict.of.Interest.PolicyTRUE                                                       8.554
-    ## Whistleblower.PolicyTRUE                                                             13.619
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         11.238
-    ## CEO.listed.with.salaryTRUE                                                           14.094
-    ## Process.for.determining.CEO.compensationTRUE                                         14.345
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                      4.669
-    ## Donor.Privacy.PolicyTRUE                                                             12.705
-    ## Board.Members.ListedTRUE                                                             16.092
-    ## Audited.FinancialsTRUE                                                               15.348
-    ## Form.990TRUE                                                                          9.976
-    ## Key.staff.listedTRUE                                                                 12.733
-    ##                                                                                     Pr(>|t|)
-    ## (Intercept)                                                                          < 2e-16
-    ## Program.Expenses                                                                     < 2e-16
-    ## Fundraising.Expenses                                                                 < 2e-16
-    ## Fundraising.Efficiency                                                               < 2e-16
-    ## Working.Capital.Ratio..years.                                                        < 2e-16
-    ## Program.Expenses.Growth                                                              < 2e-16
-    ## Liabilities.to.Assets                                                                < 2e-16
-    ## Independent.Voting.Board.MembersTRUE                                                 < 2e-16
-    ## Audited.financials.prepared.by.independent.accountantTRUE                            < 2e-16
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             1.39e-09
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE  < 2e-16
-    ## Conflict.of.Interest.PolicyTRUE                                                      < 2e-16
-    ## Whistleblower.PolicyTRUE                                                             < 2e-16
-    ## Records.Retention.and.Destruction.PolicyTRUE                                         < 2e-16
-    ## CEO.listed.with.salaryTRUE                                                           < 2e-16
-    ## Process.for.determining.CEO.compensationTRUE                                         < 2e-16
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    3.08e-06
-    ## Donor.Privacy.PolicyTRUE                                                             < 2e-16
-    ## Board.Members.ListedTRUE                                                             < 2e-16
-    ## Audited.FinancialsTRUE                                                               < 2e-16
-    ## Form.990TRUE                                                                         < 2e-16
-    ## Key.staff.listedTRUE                                                                 < 2e-16
-    ##                                                                                        
-    ## (Intercept)                                                                         ***
-    ## Program.Expenses                                                                    ***
-    ## Fundraising.Expenses                                                                ***
-    ## Fundraising.Efficiency                                                              ***
-    ## Working.Capital.Ratio..years.                                                       ***
-    ## Program.Expenses.Growth                                                             ***
-    ## Liabilities.to.Assets                                                               ***
-    ## Independent.Voting.Board.MembersTRUE                                                ***
-    ## Audited.financials.prepared.by.independent.accountantTRUE                           ***
-    ## Does.Not.Provide.Loan.s..to.or.Receive.Loan.s..From.related.partiesTRUE             ***
-    ## Provided.copy.of.Form.990.to.organization.s.governing.body.in.advance.of.filingTRUE ***
-    ## Conflict.of.Interest.PolicyTRUE                                                     ***
-    ## Whistleblower.PolicyTRUE                                                            ***
-    ## Records.Retention.and.Destruction.PolicyTRUE                                        ***
-    ## CEO.listed.with.salaryTRUE                                                          ***
-    ## Process.for.determining.CEO.compensationTRUE                                        ***
-    ## Board.Listed...Board.Members.Not.CompensatedTRUE                                    ***
-    ## Donor.Privacy.PolicyTRUE                                                            ***
-    ## Board.Members.ListedTRUE                                                            ***
-    ## Audited.FinancialsTRUE                                                              ***
-    ## Form.990TRUE                                                                        ***
-    ## Key.staff.listedTRUE                                                                ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 3.166 on 7708 degrees of freedom
-    ## Multiple R-squared:  0.832,  Adjusted R-squared:  0.8315 
-    ## F-statistic:  1817 on 21 and 7708 DF,  p-value: < 2.2e-16
+    ## # A tibble: 22 x 5
+    ##    term                              estimate std.error statistic   p.value
+    ##    <chr>                                <dbl>     <dbl>     <dbl>     <dbl>
+    ##  1 (Intercept)                         29.9      0.734      40.7  0.       
+    ##  2 Program.Expenses                    30.0      0.629      47.8  0.       
+    ##  3 Fundraising.Expenses               -13.6      0.991     -13.7  1.62e- 42
+    ##  4 Fundraising.Efficiency             -10.0      0.630     -15.9  6.20e- 56
+    ##  5 Working.Capital.Ratio..years.        0.215    0.0165     13.0  2.84e- 38
+    ##  6 Program.Expenses.Growth             14.1      0.315      44.8  0.       
+    ##  7 Liabilities.to.Assets               -9.81     0.215     -45.7  0.       
+    ##  8 Independent.Voting.Board.Members~    8.44     0.218      38.7  6.25e-299
+    ##  9 Audited.financials.prepared.by.i~    6.28     0.143      43.9  0.       
+    ## 10 Does.Not.Provide.Loan.s..to.or.R~    1.28     0.212       6.06 1.39e-  9
+    ## # ... with 12 more rows
 
 Calculate predictions for tuned linear regression
 
